@@ -6,7 +6,6 @@ from image_downloader import download_images, create_zip
 
 app = Flask(__name__)
 
-# Set up logging
 logging.basicConfig(level=logging.DEBUG)
 
 @app.route('/')
