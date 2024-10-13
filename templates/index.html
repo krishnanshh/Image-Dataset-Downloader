@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #downloadLink {
+            margin-top: 20px;
+        }
+        #downloadLink a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        #downloadLink a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Downloader</h1>
+    <form id="imageForm">
+        <label for="keyword">Keyword:</label>
+        <input type="text" id="keyword" name="keyword" required><br><br>
+        <label for="num_images">Number of Images:</label>
+        <input type="number" id="num_images" name="num_images" required><br><br>
+        <button type="submit">Download</button>
+    </form>
+
+    <div id="downloadLink" style="display:none;">
+        <a id="link" href="#" onclick="hideLink()">Download ZIP</a>
+    </div>
+
+    <script>
+        document.getElementById('imageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const keyword = document.getElementById('keyword').value;
+            const num_images = document.getElementById('num_images').value;
+
+            fetch('/download', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ keyword, num_images }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.zip_path) {
+                    const zipPath = data.zip_path;
+                    const link = document.getElementById('link');
+                    link.href = `/download_zip?zip_path=${zipPath}`;
+                    document.getElementById('downloadLink').style.display = 'block';
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        function hideLink() {
+            setTimeout(() => {
+                document.getElementById('downloadLink').style.display = 'none';
+            }, 200);
+        }
+    </script>
+</body>
+</html>
