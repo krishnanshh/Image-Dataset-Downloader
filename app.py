@@ -19,7 +19,7 @@ def download():
     keyword = data['keyword']
     num_images = int(data['num_images'])
     session_id = str(uuid.uuid4())
-    download_path = os.path.join('downloads', f'{keyword}_{session_id}')
+    download_path = os.path.join('downloads', f'{keyword}')
     zip_filename = f'{keyword}.zip'
     zip_path = os.path.abspath(os.path.join('downloads', zip_filename))
 
